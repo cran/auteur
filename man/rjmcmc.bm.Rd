@@ -88,7 +88,7 @@ pool.rjmcmcsamples(base.dirs=dirs, lab=r)
 ## view contents of .rda
 load(paste(paste(r,"combined.rjmcmc",sep="."),paste(r,"posteriorsamples.rda",sep="."),sep="/"))
 print(head(posteriorsamples$rates))
-print(head(posteriorsamples$rate.shifts))
+print(head(posteriorsamples$shifts))
 
 ## plot Markov sampled rates
 dev.new()

@@ -119,7 +119,7 @@ rjmcmc.bm <- function (	phy, dat, SE=0, ngen=1000, sample.freq=100, reml=TRUE,
 ## BM IMPLEMENTATION ##
 		while(1) {
 			cur.proposal=min(which(runif(1)<prop.cs))
-			if (cur.proposal==1) {													# adjust rate categories
+			if (cur.proposal==1 & !is.numeric(constrainK)) {						# adjust rate categories
 				nr=splitormerge(cur.delta.rates, cur.rates, ape.tre, node.des, lambdaK, logspace=TRUE, internal.only=FALSE, prop.width=prop.width, lim=lim)
 				new.rates=nr$new.values
 				new.delta.rates=nr$new.delta

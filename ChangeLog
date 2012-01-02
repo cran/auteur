@@ -1,4 +1,8 @@
 CHANGES IN AUTEUR VERSION 0.11
+2012-02-01
+  * fixed error in prepare.data.bm for trees with zero-length branches 
+  * fixed print() problem in rjmcmc.bm example
+
 2011-06-12
   * adding REML computation for faster runs with large datasets
 
