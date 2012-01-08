@@ -51,7 +51,7 @@ rjmcmc.bm <- function (	phy, dat, SE=0, ngen=1000, sample.freq=100, reml=TRUE,
 	cur.delta.rates	<- init.rate$delta
 	
 	# REML parameters
-	ic			<- pic(orig.dat, pruningwise.tre, scaled=FALSE, var=FALSE)
+	ic			<- pic(orig.dat, pruningwise.tre, scaled=FALSE, var.contrasts=FALSE)
 	
 	if(reml){
 		cur.root	<- NA
