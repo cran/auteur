@@ -1,11 +1,11 @@
-6f06eb2e334a5509e5782dcf4759526d *ChangeLog
-7fa06a4c9a532b4983c1e72600b8005d *DESCRIPTION
+56b752f2e2df214e4d54d4e6f0ff5021 *ChangeLog
+68e745ee525073823c1926e31b17da05 *DESCRIPTION
 fda96ba66aefc605aca5e4e6c8f721df *NAMESPACE
 285c35cc58f185b13252e5577c19d963 *R/auteur-internal.R
 dd6285722a69dfb8447be56d79eafc15 *R/auteur.utilities.R
 1559bfe06110024a3628dd91d9552af4 *R/likelihood.R
 29c193d950f6a2eff168fcdd4704f1ed *R/phylogenetic.utilities.R
-6b7e3b5e36e8cc01d901cc03b11e255b *R/plotting.R
+77b26ba9beaad1819a9e18dfc0a44c3a *R/plotting.R
 565977b48cbb1c8af4b946e4c2fc9dc4 *R/proposals.R
 c2ce74fe59b5af5699b2ed00dba75c2e *R/rjmcmc.R
 e3fceca9d993bef20a89adc39d06d52f *R/simulation.R
@@ -23,7 +23,7 @@ aa1b7d2031f9c48377d983a41a30443a *man/pool.rjmcmcsamples.Rd
 da14a29b9657aefb8c5a3fb8026b6d24 *man/randomization.test.Rd
 92292ae0228ccf19524746fa500c5110 *man/rjmcmc.bm.Rd
 b2506232fce38aa99fa60dd45b4ea201 *man/rjmcmc.data.Rd
-aa1863b389dec8b7fcca2ede14046ec4 *man/shifts.plot.Rd
+95a0ae0e1714244ba5ce733407e2259b *man/shifts.plot.Rd
 f5fd060f584565d7dd578314816a7188 *man/trace.plot.Rd
 41560358a581506c508aef842716c835 *man/tracer.Rd
 03a5998081dae11745fdf743ef74db60 *man/vmat.Rd

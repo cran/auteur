@@ -2,7 +2,7 @@
 \alias{shifts.plot}
 \title{plotting of Bayesian posterior samples}
 \description{Plots a phylogeny with topological indication of posterior support for evolutionary shifts}
-\usage{shifts.plot(phy, base.dir, burnin = 0, level = 0.01, paint.branches = TRUE, legend=TRUE, ...)}
+\usage{shifts.plot(phy, base.dir, burnin = 0, level = 0.01, paint.branches = TRUE, legend=TRUE, cex=1, lwd=0.4, ...)}
 \arguments{
   \item{phy}{a phylogenetic tree of class 'phylo'}
   \item{base.dir}{a directory name, in which the results from \code{rjMCMC} are to be found}
@@ -10,6 +10,8 @@
   \item{level}{a level of posterior support (from 0 to 1) for a branch-associated evolutionary shifts, above which results will be compiled}
   \item{paint.branches}{a logical switch governing whether branches in the phylogeny are to be shaded according to their model-averaged estimates}
   \item{legend}{a logical switch that determines whether keys for the generated symbols and colors are plotted}
+  \item{cex}{character expansion for tip labels}
+  \item{lwd}{line width for plotted tree}
   \item{\dots}{additional arguments to be passed to \code{\link[ape]{plot.phylo}}}
 }
 \value{

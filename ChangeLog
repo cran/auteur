@@ -1,4 +1,7 @@
 CHANGES IN AUTEUR VERSION 0.11
+2012-01-18
+  * allowing user to control cex and lwd in shifts.plot
+
 2012-01-08
   * fixed error in prepare.data.bm for trees with zero-length branches 
   * fixed print() problem in rjmcmc.bm example

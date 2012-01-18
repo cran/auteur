@@ -264,7 +264,7 @@ process.shifts<-function(phy, shifts, level) {
 }
 
 shifts.plot <-
-function(phy, base.dir, burnin=0, level=0.01, paint.branches=TRUE, legend=TRUE, ...) {
+function(phy, base.dir, burnin=0, level=0.01, paint.branches=TRUE, legend=TRUE, cex=1, lwd=0.4, ...) {
 	color.length=17
 #	oldwd=getwd()
 #	setwd(base.dir)
@@ -358,7 +358,6 @@ function(phy, base.dir, burnin=0, level=0.01, paint.branches=TRUE, legend=TRUE, 
 	}
 	
 	## PLOTTING OF TREE ##
-	CEX=max(c(0.05, (2+-0.36*log(Ntip(phy))) ))	
 	
 	if(legend) {
 		def.par <- par(no.readonly = TRUE) 
@@ -366,8 +365,9 @@ function(phy, base.dir, burnin=0, level=0.01, paint.branches=TRUE, legend=TRUE, 
 		layout(matrix(c(1,2,1,3,1,4), 3, 2, byrow=TRUE), widths=c(20,5), respect=FALSE)
 	}
 	
-#	if(pdf) pdf(file=paste(outdir, paste(out.base,"pdf",sep="."),sep="/"))
-	plot(phy, cex=CEX, lwd=0.4, edge.color=colors.branches, show.tip.label=TRUE, label.offset=strwidth(par("pch"),cex=1.25), no.margin=TRUE, ...)
+	tCEX=max(c(0.05, (2+-0.36*log(Ntip(phy))) ))	
+
+	plot.phylo(phy, cex=tCEX*cex, lwd=lwd, edge.color=colors.branches, label.offset=strwidth(par("pch"),cex=1.25), no.margin=legend, ...)
 	NN=phy$edge[,2]
 	ll<-cc<-rr<-rep(0,length(NN))
 	if(!is.null(shifts.res$branch.shift.probability)) {
