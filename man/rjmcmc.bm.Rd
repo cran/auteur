@@ -2,7 +2,10 @@
 \alias{rjmcmc.bm}
 \title{Bayesian sampling of shifts in trait-evolutionary rates: Brownian motion}
 \description{Implements reversible-jump Markov chain Monte Carlo sampling to identify shifts in the process of continuous trait evolution across phylogenetic trees}
-\usage{rjmcmc.bm(phy, dat, SE=0, ngen = 1000, sample.freq = 100, reml=TRUE, prob.mergesplit = 0.20, prob.root = 0.05, lambdaK = log(2), tuner = 0.05, constrainK = FALSE, prop.width = NULL, simplestart = FALSE, lim = list(min = 0, max = Inf), summary = TRUE, fileBase = "result")}
+\usage{rjmcmc.bm(phy, dat, SE=0, ngen = 1000, sample.freq = 100, 
+    reml=TRUE, prob.mergesplit = 0.20, prob.root = 0.05, lambdaK = log(2), 
+    tuner = 0.05, constrainK = FALSE, prop.width = NULL, simplestart = FALSE, 
+    lim = list(min = 0, max = Inf), summary = TRUE, fileBase = "result")}
 \arguments{
   \item{phy}{a phylogenetic tree of class 'phylo'}
   \item{dat}{a named vector of continuous trait values, associated with each species in \code{phy}; see \code{\link[geiger]{name.check}}}
@@ -47,6 +50,7 @@ Posterior results are written to several files within a base directory, the cont
 
 \author{LJ Harmon, AL Hipp, and JM Eastman}
 \examples{
+\donttest{
 #############
 ## generate tree
 n=24
@@ -79,7 +83,10 @@ dat=rTraitCont(phy=rphy, model="BM", sigma=sqrt(0.1))
 
 ## run two short reversible-jump Markov chains
 r=paste(sample(letters,9,replace=TRUE),collapse="")
-lapply(1:2, function(x) rjmcmc.bm(phy=phy, dat=dat, ngen=10000, sample.freq=10, prob.mergesplit=0.1, simplestart=TRUE, prop.width=1, fileBase=paste(r,x,sep=".")))
+lapply(1:2, function(x) {
+    rjmcmc.bm(phy=phy, dat=dat, ngen=10000, sample.freq=10, 
+        prob.mergesplit=0.1, simplestart=TRUE, prop.width=1, fileBase=paste(r,x,sep="."))
+})
 
  # collect directories
 dirs=dir("./",pattern=paste("BM",r,sep="."))
@@ -96,4 +103,5 @@ shifts.plot(phy=phy, base.dir=paste(r,"combined.rjmcmc",sep="."), burnin=0.5, le
 
 ## PASTE UNCOMMENTED FOLLOWING LINE TO DROP DIRECTORIES CREATED BY RJMCMC
  # unlink(dir(pattern=paste(r)),recursive=TRUE)
+}
 }

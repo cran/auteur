@@ -2,7 +2,8 @@
 \alias{shifts.plot}
 \title{plotting of Bayesian posterior samples}
 \description{Plots a phylogeny with topological indication of posterior support for evolutionary shifts}
-\usage{shifts.plot(phy, base.dir, burnin = 0, level = 0.01, paint.branches = TRUE, legend=TRUE, cex=1, lwd=0.4, ...)}
+\usage{shifts.plot(phy, base.dir, burnin = 0, level = 0.01, 
+    paint.branches = TRUE, legend=TRUE, cex=1, lwd=0.4, ...)}
 \arguments{
   \item{phy}{a phylogenetic tree of class 'phylo'}
   \item{base.dir}{a directory name, in which the results from \code{rjMCMC} are to be found}
@@ -22,6 +23,7 @@ evolutionary process involving at least one shift.}
 \author{JM Eastman}
 
 \examples{
+\donttest{
 #############
 ## generate tree
 n=24
@@ -54,7 +56,10 @@ dat=rTraitCont(phy=rphy, model="BM", sigma=sqrt(0.1))
 
 ## run two short reversible-jump Markov chains
 r=paste(sample(letters,9,replace=TRUE),collapse="")
-lapply(1:2, function(x) rjmcmc.bm(phy=phy, dat=dat, ngen=10000, sample.freq=10, prob.mergesplit=0.1, simplestart=TRUE, prop.width=1, fileBase=paste(r,x,sep=".")))
+lapply(1:2, function(x) {
+    rjmcmc.bm(phy=phy, dat=dat, ngen=10000, sample.freq=10, 
+        prob.mergesplit=0.1, simplestart=TRUE, prop.width=1, fileBase=paste(r,x,sep="."))
+})
 
  # collect directories
 dirs=dir("./",pattern=paste("BM",r,sep="."))
@@ -66,4 +71,5 @@ shifts.plot(phy=phy, base.dir=paste(r,"combined.rjmcmc",sep="."), burnin=0.5, le
 
 ## PASTE UNCOMMENTED FOLLOWING LINE TO DROP DIRECTORIES CREATED BY RJMCMC
  # unlink(dir(pattern=paste(r)),recursive=TRUE)
+}
 }

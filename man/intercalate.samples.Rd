@@ -16,6 +16,10 @@ A=toupper(letters[1:10])
 intercalate.samples(list(a,A))
 
 # with multi-column dataframes
-list.obj=lapply(1:5, function(x) {y=data.frame(matrix(data=runif(9)+x, nrow=3)); names(y)=letters[1:3]; return(y)})
+list.obj=lapply(1:5, function(x) {
+    y=data.frame(matrix(data=runif(9)+x, nrow=3))
+    names(y)=letters[1:3]
+    return(y)
+})
 intercalate.samples(list.obj)
 }

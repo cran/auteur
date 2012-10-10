@@ -11,7 +11,6 @@
 \alias{branchcol.plot} 
 \alias{checkrates}
 \alias{choose.one}
-\alias{circularplot}
 \alias{cleanup.files}
 \alias{collect.nodes}
 \alias{determine.accepted.proposal}
@@ -48,7 +47,6 @@
 \alias{oumat}
 \alias{ouweights}
 \alias{pic_variance}
-\alias{plotfangram}
 \alias{rtpois}
 \alias{splitormerge}
 \alias{splitrate}

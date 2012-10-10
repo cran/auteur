@@ -17,14 +17,19 @@ dat=rTraitCont(phy=phy, model="BM", sigma=sqrt(0.1))
 
 ## run three short reversible-jump Markov chains
 r=paste(sample(letters,9,replace=TRUE),collapse="")
-lapply(1:3, function(x) rjmcmc.bm(phy=phy, dat=dat, ngen=500, sample.freq=10, prob.mergesplit=0.1, simplestart=FALSE, prop.width=1, fileBase=paste(r,x,sep=".")))
+lapply(1:3, function(x) {
+    rjmcmc.bm(phy=phy, dat=dat, ngen=500, sample.freq=10, 
+        prob.mergesplit=0.1, simplestart=FALSE, 
+        prop.width=1, fileBase=paste(r,x,sep="."))
+})
 
  # collect directories
 dirs=sapply(1:3, function(x) dir("./",pattern=paste("BM",r,x,sep=".")))
 pool.rjmcmcsamples(base.dirs=dirs, lab=r)
 
  # plot density of sampled mean rates across tree
-rates=read.table(file=paste(dir(pattern=paste(r,"combined.rjmcmc",sep=".")),paste(r,"rjmcmc.log",sep="."),sep="/"),header=TRUE)$mean
+dd=paste(dir(pattern=paste(r,"combined.rjmcmc",sep=".")))
+rates=read.table(file=paste(dd,paste(r,"rjmcmc.log",sep="."),sep="/"),header=TRUE)$mean
 trace.plot(rates,col="maroon",alpha=0.4,xlab="rates",log="x",legend.control=list(plot=FALSE))
 
 ## PASTE UNCOMMENTED FOLLOWING LINE TO DROP DIRECTORIES CREATED BY RJMCMC

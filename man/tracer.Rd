@@ -3,7 +3,8 @@
 \title{plotting of Bayesian posterior samples }
 \description{
 Generates diagnostics for reversible-jump Markov sampling densities}
-\usage{tracer(base.log, lambdaK = log(2), Bayes.factor = NULL, burnin = 0.25, col.line = 1, pdf = TRUE, factor="M",...)}
+\usage{tracer(base.log, lambdaK = log(2), Bayes.factor = NULL, 
+    burnin = 0.25, col.line = 1, pdf = TRUE, factor="M",...)}
 \arguments{
   \item{base.log}{a path to the stored summary logfile of the Markov sample}
   \item{lambdaK}{the shape parameter for the Poisson distribution used as a prior on the number of distinct evolutionary parameters in the tree}
@@ -21,6 +22,7 @@ can be \code{Bayes.factor=c(1,"multi")} in which a comparison between a global-p
 
 \author{JM Eastman}
 \examples{
+\donttest{
 # generate tree
 n=24
 phy=prunelastsplit(birthdeath.tree(b=1,d=0,taxa.stop=n+1))
@@ -33,8 +35,11 @@ r=paste(sample(letters,9,replace=TRUE),collapse="")
 rjmcmc.bm(phy=phy, dat=dat, ngen=5000, sample.freq=10, prob.mergesplit=0.1, fileBase=r)
 
 # plot Markov sampled rates and other traces
-tracer(base.log=paste(paste("BM",r,"parameters",sep="."),paste("BM",r,"rjmcmc.log",sep="."),sep="/"), lambdaK=log(2), Bayes.factor=c(1,"multi"), burnin=0.25, pdf=FALSE, factor="k")
+tracer(base.log=paste(paste("BM",r,"parameters",sep="."),
+    paste("BM",r,"rjmcmc.log",sep="."),sep="/"), lambdaK=log(2),
+    Bayes.factor=c(1,"multi"), burnin=0.25, pdf=FALSE, factor="k")
 
 ## PASTE UNCOMMENTED FOLLOWING LINE TO DROP DIRECTORIES CREATED BY RJMCMC
  # unlink(dir(pattern=paste(r)),recursive=TRUE)
+}
 }

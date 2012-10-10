@@ -23,6 +23,7 @@ A list of scaled relative values for each branch and the result of statistical c
 }
 \author{JM Eastman}
 \examples{
+\donttest{
 ## generate tree
 n=24
 phy=prunelastsplit(birthdeath.tree(b=1,d=0,taxa.stop=n+1))
@@ -72,4 +73,5 @@ trace.plot(obj=data.frame(comp$scl.A, comp$scl.B), col=c("red","black"), alpha=0
 
 ## PASTE UNCOMMENTED FOLLOWING LINE TO DROP DIRECTORIES CREATED BY RJMCMC
 # unlink(dir(pattern=paste(r)),recursive=TRUE)
+}
 }

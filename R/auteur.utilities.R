@@ -1,3 +1,43 @@
+.link.root=function(rootd, rootv, nd, d, v, edgeorder, reml=TRUE){
+    
+    if(reml){
+        d=d[edgeorder]
+        v=v[edgeorder]
+    }
+    
+    open=nd[which(d==0)]
+    rooto=rootd[rootd%in%open]
+    if(length(rooto)){
+        uu=unique(v[nd%in%rooto])
+        if(!length(uu)==1) {
+            stop("encountered unexpected error")
+        }
+    } else {
+        uu=rootv
+    }
+    uu
+}
+
+.check.root=function(rootd, rootv, nd, d, v, edgeorder, reml=TRUE, ...){
+    if(reml){
+        d=d[edgeorder]
+        v=v[edgeorder]
+    }
+    open=nd[which(d==0)]
+    rooto=rootd[rootd%in%open]
+    if(length(rooto)){
+        uu=unique(v[nd%in%rooto])
+        if(!all(uu==rootv)) {
+            xx=as.list(...)
+            for(i in 1:length(xx)) print(xx[[i]])
+            stop("encountered unexpected error in link between 'rates' and 'root'")
+        }
+    }
+}
+
+
+
+
 #rjmcmc run diagnosis, generating tallies of proposed and accepted updates by class of proposal mechanism
 #author: JM EASTMAN 2010
 
@@ -217,13 +257,15 @@ function(ntip, i, mod.cur, mod.new, lnL, lnPrior, lnHastings, curCats, newCats, 
 #author: JM EASTMAN 2010
 
 generate.starting.point <-
-function(data, phy, node.des=NULL, K=FALSE, prop.width, model="BM", lim=c(min=-Inf, max=Inf)) { 
-
+function(data, phy, node.des=NULL, K=FALSE, prop.width, model="BM", lim=list(min=-Inf, max=Inf)) { 
+    
 	if(is.null(node.des)) {
 		node.des		<- sapply(unique(c(phy$edge[1,1],phy$edge[,2])), function(x) get.descendants.of.node(x, phy))
 		names(node.des) <- c(phy$edge[1,1], unique(phy$edge[,2]))
 	}
 	
+    rootd=get.desc.of.node(Ntip(phy)+1, phy) ##JME
+
 	if(model=="BM") {
 		init=fit.continuous(phy,data)
 	}
@@ -238,7 +280,11 @@ function(data, phy, node.des=NULL, K=FALSE, prop.width, model="BM", lim=c(min=-I
 	
 	# initialize values 
 	vv=numeric(length(bb))
-	values=sapply(1:(sum(bb)+1), function(x) proposal.multiplier(x, prop.width, lim)$v)
+    while(1){
+        values=rexp(length(shifts)+1, 1/10)
+        if(checkrates(values, lim)) break()
+        
+    }
 	vv[]=values[1]
 	names(vv)=phy$edge[,2]
 	if(length(shifts)) {
@@ -258,8 +304,21 @@ function(data, phy, node.des=NULL, K=FALSE, prop.width, model="BM", lim=c(min=-I
 			}
 		}
 	}
-	
-	return(list(delta=unname(bb), values=unname(vv)))
+    ##### root rate
+    if(all(rootd%in%shifts)){
+        while(1){
+            rootr=mean(vv)
+            if(checkrates(rootr, lim)) break()
+        }
+    } else {
+        freed=rootd[!rootd%in%shifts]
+        rootr=unique(vv[match(freed, names(vv))])
+        if(!length(rootr)==1) {
+            stop("Encountered unexpected error")
+        }
+    }
+    #####
+	return(list(delta=unname(bb), values=unname(vv), root=rootr)) ##JME
 }
 
 #general utility for combining supplied list of dataframes into a single 'intercalated' sample. E.g., list(as.data.frame(c(AAA)),as.data.frame(c(BBB))) becomes data.frame(c(ABABAB))

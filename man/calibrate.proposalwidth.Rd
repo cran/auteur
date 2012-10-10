@@ -8,7 +8,8 @@ initialize proposal width
 Generates a reasonable proposal width to initiate sampling for Markov sampling
 }
 \usage{
-calibrate.proposalwidth(phy, dat, nsteps = 100, model, widths = NULL, lim = list(min = 0, max = Inf), reml = FALSE)
+calibrate.proposalwidth(phy, dat, nsteps = 100, model, widths = NULL,
+                        lim = list(min = 0, max = Inf), reml = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,6 +36,7 @@ available to the user.}
 \author{
 JM Eastman}
 \examples{
+\donttest{
 n=4
 phy=rescaleTree(phy=rcoal(n=n),totalDepth=100)
 dat=rTraitCont(phy=phy, model="BM", sigma=sqrt(0.1))
@@ -48,4 +50,5 @@ rjmcmc.bm(phy=phy, dat=dat, ngen=5000, sample.freq=10, prob.mergesplit=0.05, pro
 
 ## PASTE UNCOMMENTED FOLLOWING LINE TO DROP DIRECTORIES CREATED BY RJMCMC
  # unlink(dir(pattern=paste(r)),recursive=TRUE)
+}
 }

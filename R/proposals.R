@@ -14,12 +14,15 @@ function(cur.delta, cur.values, phy, node.des, lambda=lambda, logspace=TRUE, int
 	marker=match(s, names(new.vv))
 	nn=length(vv)
 	K=sum(bb)
-	N=Ntip(phy)
+	Nk=nrow(phy$edge)
 	
 	cur.vv=as.numeric(vv[marker])
 	ca.vv=length(which(vv==cur.vv))
 	
 	if(sum(new.bb)>sum(bb)) {			## add transition: SPLIT
+        if(sum(new.bb)==Nk){
+            return(list(new.delta=cur.delta, new.values=cur.values, lnHastingsRatio=0, lnPriorRatio=0, decision="none")) ## CANNOT SPLIT
+        }
 		decision="split"
 		n.desc=length(unexcludeddescendants(s, phy, all.shifts))+1
 		n.split=sum(vv==cur.vv)-n.desc
@@ -33,7 +36,7 @@ function(cur.delta, cur.values, phy, node.des, lambda=lambda, logspace=TRUE, int
 		new.vv[vv==cur.vv]=nr.split
 		new.vv=assigndescendants(new.vv, s, nr.desc, phy, all.shifts)
 		
-		lnHastingsRatio = log((K+1)/(2*N-2-K)) ### from Drummond and Suchard 2010: where N is tips, K is number of local parms in tree
+		lnHastingsRatio = log((K+1)/(Nk-K)) ### from Drummond and Suchard 2010: where N is tips, K is number of local parms in tree
 		lnPriorRatio = dpois(K+1,lambda,log=TRUE)-dpois(K,lambda,log=TRUE)
 		
 	} else {							## drop transition: MERGE
@@ -53,7 +56,7 @@ function(cur.delta, cur.values, phy, node.des, lambda=lambda, logspace=TRUE, int
 			new.vv[vv==cur.vv | vv==sis.vv]=nr			
 		}
 		
-		lnHastingsRatio = log((2*N-2-K+1)/K) ### from Drummond and Suchard 2010: where N is tips, K is number of local parms in tree
+		lnHastingsRatio = log((Nk-K+1)/K) ### from Drummond and Suchard 2010: where N is tips, K is number of local parms in tree
 		lnPriorRatio = dpois(K-1,lambda,log=TRUE)-dpois(K,lambda,log=TRUE)
 	}
 	
@@ -100,8 +103,9 @@ function(phy, node, up=NA, use.edges=FALSE){
 				choice=node
 				direction=NULL
 			} else {
-				choice=tree.slide(phy, node, up=TRUE)$node
-				direction="up"
+				tmp=tree.slide(phy, node, up=TRUE)
+                choice=tmp$node
+				direction=tmp$direction
 			}
 		} else {						# -- choice is an internal node
 			desc.edges=phy$edge.length[match(descendants, phy$edge[,2])]
@@ -157,10 +161,11 @@ function(rate, prop.width) {
 #author: JM EASTMAN 2011
 
 adjustshift <-
-function(phy, cur.delta, cur.values){
+function(phy, cur.delta, cur.values, cur.rootvalue){
 	delta=cur.delta
 	values=cur.values
-	
+    rootv=cur.rootvalue
+
 	root=Ntip(phy)+1
 	root.des=get.desc.of.node(root, phy)
 	names(delta)<-names(values)<-phy$edge[,2]
@@ -169,15 +174,15 @@ function(phy, cur.delta, cur.values){
 	val=as.numeric(values[which(names(values)==node)])
 	
 	# select new node
-	tmp=tree.slide(phy, node, up=NA)
-	newnode=tmp$node
-	direction=tmp$direction
+	tsl=tree.slide(phy, node, up=NA)
+	newnode=tsl$node
+	direction=tsl$direction
 	
 	# store all current shifts
 	shifts=shifts[shifts!=node]
 	
 	# determine if new shift is non-permissible
-	if(newnode%in%c(node,shifts) | all(root.des%in%c(shifts,newnode))) {
+	if(newnode%in%c(node,shifts)) {
 		return(list(new.delta=delta, new.values=values, lnHastingsRatio=0))
 	} else {		
 		
@@ -194,9 +199,7 @@ function(phy, cur.delta, cur.values){
 		} else if(direction=="down") {
 			anc=get.ancestor.of.node(node, phy)
 			if(anc==root){
-				tmp=get.desc.of.node(root, phy)
-				dd=tmp[!tmp%in%c(node,shifts)]
-				anc.val=unique(as.numeric(values[match(dd, names(values))]))
+                anc.val=rootv
 			} else {
 				anc.val=as.numeric(values[which(names(values)==anc)])
 			}
@@ -205,9 +208,12 @@ function(phy, cur.delta, cur.values){
 			h = (1/2) / ((1/2)*(1/length(get.desc.of.node(node,phy))))
 			lnh=log(h)
 		} else if(direction=="root"){
+            new.values=assigndescendants(values, newnode, val, phy, shifts)
+            new.values=assigndescendants(new.values, node, rootv, phy, shifts)
+
 			lnh=0
 		}
-		return(list(new.delta=new.delta, new.values=new.values, lnHastingsRatio=lnh))
+		return(list(new.delta=new.delta, new.values=new.values, lnHastingsRatio=lnh, direction=direction))
 	}
 }
 
@@ -440,23 +446,19 @@ proposal.slidingwindow <- function(value, prop.width, lim=list(min=-Inf, max=Inf
 }
 
 
+## PROPOSAL MECHANISM ##
 #rjmcmc proposal mechanism: scale a value with asymmetrically drawn multiplier
 #author: JM EASTMAN 2011
-
+# from Lakner et al. 2008 Syst Biol
 proposal.multiplier <- function(value, prop.width, lim=list(min=-Inf, max=Inf)){
 	if(!checkrates(value, lim)) stop("Values appear out of bounds.")
-
-	tmp=c(prop.width, 1/prop.width)
-	a=min(tmp)
-	b=max(tmp)
-	lambda=2*log(b)
+	
 	while(1){
-		u=runif(1)
-		m=exp(lambda*(u-0.5))
+		m=exp(prop.width*(runif(1)-0.5))
 		v=value*m
 		if(checkrates(v, lim)) break()
 	}
-	return(list(v=v, lnHastingsRatio=log(u)))
+	return(list(v=v, lnHastingsRatio=log(m)))
 }
 
 

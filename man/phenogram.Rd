@@ -7,7 +7,9 @@ trait evolution along phylogenies}
 \description{
 simulating incremental phenotypic evolution by Brownian motion or Levy process along a phylogenetic tree}
 \usage{
-phenogram(phy, model = c("levy", "bm"), alpha = 0, rate = 0.01, lambda = 0.5, sigma = 0.5, increments = 100, plot = TRUE, node.cex = 2, ...)
+phenogram(phy, model = c("levy", "bm"), 
+    alpha = 0, rate = 0.01, lambda = 0.5, sigma = 0.5, 
+    increments = 100, plot = TRUE, node.cex = 2, ...)
 }
 \arguments{
   \item{phy}{
